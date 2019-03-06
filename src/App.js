@@ -1,26 +1,52 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { Component } from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import Contact from "./ContactsList";
+import Forms from "./form";
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+     List : []
+    };
+  }
+  save = obj => {
+    this.setState({
+      List: [...this.state.List, obj]
+    });
+  };
+  delete = index => {
+    this.setState({
+      List: [
+        ...this.state.List.slice(0, index),
+        ...this.state.List.slice(index + 1)
+      ]
+    });
+  };
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <BrowserRouter>
+        <div>
+          <Route
+            path="/"
+            render={props => (
+              <Contact
+                {...props}
+                List={this.state.List}
+                delete={this.delete}
+              />
+            )}
+            exact
+          />
+          <Route
+            path="/add"
+            render={props => (
+              <Forms {...props} save={this.save} />
+            )}
+          />
+        </div>
+      </BrowserRouter>
     );
   }
 }
